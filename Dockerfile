@@ -111,8 +111,8 @@ ADD ./elasticsearch/elasticsearch.yml /etc/elasticsearch/elasticsearch.yml
 
 # certs/keys for Beats and Lumberjack input
 RUN mkdir -p /etc/pki/tls/certs && mkdir /etc/pki/tls/private
-ADD ./logstash/beats.crt /etc/pki/tls/certs/beats.crt
-ADD ./logstash/beats.key /etc/pki/tls/private/beats.key
+ADD ./logstash/logstash-beats.crt /etc/pki/tls/certs/logstash-beats.crt
+ADD ./logstash/logstash-beats.key /etc/pki/tls/private/logstash-beats.key
 
 # filters
 ADD ./filters/beats.conf /etc/logstash/conf.d/beats.conf
