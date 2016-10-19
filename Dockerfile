@@ -104,35 +104,34 @@ RUN sed -i -e 's#^KIBANA_HOME=$#KIBANA_HOME='$KIBANA_HOME'#' /etc/init.d/kibana 
 
 ### configure Elasticsearch
 
-ADD ./elasticsearch.yml /etc/elasticsearch/elasticsearch.yml
+ADD ./elasticsearch/elasticsearch.yml /etc/elasticsearch/elasticsearch.yml
 
 
 ### configure Logstash
 
 # certs/keys for Beats and Lumberjack input
 RUN mkdir -p /etc/pki/tls/certs && mkdir /etc/pki/tls/private
-ADD ./logstash-forwarder.crt /etc/pki/tls/certs/logstash-forwarder.crt
-ADD ./logstash-forwarder.key /etc/pki/tls/private/logstash-forwarder.key
-ADD ./logstash-beats.crt /etc/pki/tls/certs/logstash-beats.crt
-ADD ./logstash-beats.key /etc/pki/tls/private/logstash-beats.key
+ADD ./logstash/beats.crt /etc/pki/tls/certs/beats.crt
+ADD ./logstash/beats.key /etc/pki/tls/private/beats.key
 
 # filters
-ADD ./01-lumberjack-input.conf /etc/logstash/conf.d/01-lumberjack-input.conf
-ADD ./02-beats-input.conf /etc/logstash/conf.d/02-beats-input.conf
-ADD ./10-syslog.conf /etc/logstash/conf.d/10-syslog.conf
-ADD ./11-nginx.conf /etc/logstash/conf.d/11-nginx.conf
-ADD ./30-output.conf /etc/logstash/conf.d/30-output.conf
+ADD ./filters/beats.conf /etc/logstash/conf.d/beats.conf
+ADD ./filters/syslog.conf /etc/logstash/conf.d/syslog.conf
+ADD ./filters/nginx.conf /etc/logstash/conf.d/nginx.conf
+ADD ./filters/output.conf /etc/logstash/conf.d/output.conf
 
 # patterns
-ADD ./nginx.pattern ${LOGSTASH_HOME}/patterns/nginx
+ADD ./patterns/nginx ${LOGSTASH_HOME}/patterns/nginx
+ADD ./patterns/site ${LOGSTASH_HOME}/patterns/site
+ADD ./patterns/integrations ${LOGSTASH_HOME}/patterns/integrations
 RUN chown -R logstash:logstash ${LOGSTASH_HOME}/patterns
 
 
 ### configure logrotate
 
-ADD ./elasticsearch-logrotate /etc/logrotate.d/elasticsearch
-ADD ./logstash-logrotate /etc/logrotate.d/logstash
-ADD ./kibana-logrotate /etc/logrotate.d/kibana
+ADD ./elasticsearch/elasticsearch-logrotate /etc/logrotate.d/elasticsearch
+ADD ./logstash/logstash-logrotate /etc/logrotate.d/logstash
+ADD ./kibana/kibana-logrotate /etc/logrotate.d/kibana
 RUN chmod 644 /etc/logrotate.d/elasticsearch \
  && chmod 644 /etc/logrotate.d/logstash \
  && chmod 644 /etc/logrotate.d/kibana

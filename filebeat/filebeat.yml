@@ -1,0 +1,51 @@
+filebeat:
+  prospectors:
+
+    # Syslogs
+    -
+      paths:
+        - /var/log/*.log
+      input_type: log
+      document_type: syslog
+
+    # Integration logs
+    -
+      paths:
+        - /tmp/integrations.log*
+      input_type: log
+      multiline:
+        # Patterns attempt to match the following:
+        #     - 2016-10-19 11:30:00,641 [DEBUG] ...
+        pattern: ^[0-9]+-[0-9]+-[0-9]+
+        negate: true
+      document_type: integrations
+
+    # Django Logs
+    -
+      paths:
+        - /home/ec2-user/projects/pymetrics_project/pymetrics/logs/*.log*
+      input_type: log
+      multiline:
+        # Patterns attempt to match the following:
+        #     - ERROR   2016-10-19 15:03:55,811 ...
+        pattern: ^[A-Z]+\t [0-9]
+        negate: true
+      document_type: django
+
+  registry_file: /var/lib/filebeat/registry
+
+output:
+  logstash:
+    # TODO dlin: change later to proper setup
+    hosts: ["172.16.20.208:5044"]
+    tls:
+      certificate_authorities: ["/etc/pki/tls/certs/logstash-beats.crt"]
+
+logging:
+  to_files: true
+  files:
+    path: /var/log/filebeat
+    rotateeverybytes: 10485760 # = 10MB
+  level: debug
+
+
