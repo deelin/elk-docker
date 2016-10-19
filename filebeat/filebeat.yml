@@ -18,19 +18,35 @@ filebeat:
         #     - 2016-10-19 11:30:00,641 [DEBUG] ...
         pattern: ^[0-9]+-[0-9]+-[0-9]+
         negate: true
+        match: before
       document_type: integrations
 
-    # Django Logs
+    # debug.log
     -
       paths:
-        - /home/ec2-user/projects/pymetrics_project/pymetrics/logs/*.log*
+        - /home/ec2-user/projects/pymetrics_project/pymetrics/logs/debug.log*
       input_type: log
       multiline:
         # Patterns attempt to match the following:
         #     - ERROR   2016-10-19 15:03:55,811 ...
         pattern: ^[A-Z]+\t [0-9]
         negate: true
-      document_type: django
+        match: before
+      document_type: site-debug
+
+    # pymetrics/exceptions.log
+    -
+      paths:
+        - /home/ec2-user/projects/pymetrics_project/pymetrics/logs/exceptions.log*
+        - /home/ec2-user/projects/pymetrics_project/pymetrics/logs/pymetrics.log*
+      input_type: log
+      multiline:
+        # Patterns attempt to match the following:
+        #     - ERROR   2016-10-19 15:03:55,811 ...
+        pattern: ^[A-Z]+\t [0-9]
+        negate: true
+        match: before
+      document_type: site-general
 
   registry_file: /var/lib/filebeat/registry
 
