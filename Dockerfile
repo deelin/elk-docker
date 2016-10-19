@@ -71,7 +71,7 @@ RUN mkdir ${LOGSTASH_HOME} \
  && mkdir -p /var/log/logstash /etc/logstash/conf.d \
  && chown -R logstash:logstash ${LOGSTASH_HOME} /var/log/logstash
 
-ADD ./logstash-init /etc/init.d/logstash
+ADD ./logstash/logstash-init /etc/init.d/logstash
 RUN sed -i -e 's#^LS_HOME=$#LS_HOME='$LOGSTASH_HOME'#' /etc/init.d/logstash \
  && chmod +x /etc/init.d/logstash
 
@@ -93,7 +93,7 @@ RUN mkdir ${KIBANA_HOME} \
  && mkdir -p /var/log/kibana \
  && chown -R kibana:kibana ${KIBANA_HOME} /var/log/kibana
 
-ADD ./kibana-init /etc/init.d/kibana
+ADD ./kibana/kibana-init /etc/init.d/kibana
 RUN sed -i -e 's#^KIBANA_HOME=$#KIBANA_HOME='$KIBANA_HOME'#' /etc/init.d/kibana \
  && chmod +x /etc/init.d/kibana
 
