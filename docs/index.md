@@ -234,7 +234,7 @@ Here is a sample `/etc/filebeat/filebeat.yml` configuration file for Filebeat, t
 	      - elk:5044
 	    tls:
 		  certificate_authorities:
-      	    - /etc/pki/tls/certs/logstash-beats.crt
+      	    - /etc/pki/tls/certs/beats.crt
 	    timeout: 15
 	
 	filebeat:
@@ -251,7 +251,7 @@ Here is a sample `/etc/filebeat/filebeat.yml` configuration file for Filebeat, t
 
 In the sample configuration file, make sure that you replace `elk` in `elk:5044` with the hostname or IP address of the ELK-serving host.
 
-You'll also need to copy the `logstash-beats.crt` file (which contains the certificate authority's certificate – or server certificate as the certificate is self-signed – for Logstash's Beats input plugin; see [Security considerations](#security-considerations) for more information on certificates) from the [source repository of the ELK image](https://github.com/spujadas/elk-docker) to `/etc/pki/tls/certs/logstash-beats.crt`.
+You'll also need to copy the `beats.crt` file (which contains the certificate authority's certificate – or server certificate as the certificate is self-signed – for Logstash's Beats input plugin; see [Security considerations](#security-considerations) for more information on certificates) from the [source repository of the ELK image](https://github.com/spujadas/elk-docker) to `/etc/pki/tls/certs/beats.crt`.
 
 **Note** – The ELK image includes configuration items (`/etc/logstash/conf.d/11-nginx.conf` and `/opt/logstash/patterns/nginx`) to parse nginx access logs, as forwarded by the Filebeat instance above.
 
@@ -625,19 +625,19 @@ The following commands will generate a private key and a 10-year self-signed cer
 	$ cd /etc/pki/tls
 	$ sudo openssl req -x509 -batch -nodes -subj "/CN=elk/" \
 		-days 3650 -newkey rsa:2048 \
-		-keyout private/logstash-beats.key -out certs/logstash-beats.crt
+		-keyout private/beats.key -out certs/beats.crt
 
 As another example, when running a non-predefined number of containers concurrently in a cluster with hostnames _directly_ under the `.mydomain.com` domain (e.g. `elk1.mydomain.com`, `elk2.mydomain.com`, etc.; _not_ `elk1.subdomain.mydomain.com`, `elk2.othersubdomain.mydomain.com` etc.), you could create a certificate assigned to the wildcard hostname `*.example.com` by using the following command (all other parameters are identical to the ones in the previous example).   
 
 	$ cd /etc/pki/tls
 	$ sudo openssl req -x509 -batch -nodes -subj "/CN=*.example.com/" \
 		-days 3650 -newkey rsa:2048 \
-		-keyout private/logstash-beats.key -out certs/logstash-beats.crt
+		-keyout private/beats.key -out certs/beats.crt
 
 To make Logstash use the generated certificate to authenticate to a Beats client, extend the ELK image to overwrite (e.g. using the `Dockerfile` directive `ADD`):
 
-- the certificate file (`logstash-beats.crt`) with `/etc/pki/tls/certs/logstash-beats.crt`.
-- the private key file (`logstash-beats.key`) with `/etc/pki/tls/private/logstash-beats.key`,
+- the certificate file (`beats.crt`) with `/etc/pki/tls/certs/beats.crt`.
+- the private key file (`beats.key`) with `/etc/pki/tls/private/beats.key`,
 
 Additionally, remember to configure your Beats client to trust the newly created certificate using the `certificate_authorities` directive, as presented in [Forwarding logs with Filebeat](#forwarding-logs-filebeat).
 
