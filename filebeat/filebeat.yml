@@ -54,8 +54,9 @@ output:
   logstash:
     # TODO dlin: change later to proper setup
     hosts: ["172.16.20.208:5044"]
-    tls:
-      certificate_authorities: ["/etc/pki/tls/certs/beats.crt"]
+    # TODO dlin: add in TLS support
+    #tls:
+    #  certificate_authorities: ["/etc/pki/tls/certs/beats.crt"]
 
 logging:
   to_files: true
