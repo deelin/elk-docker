@@ -5,23 +5,17 @@
 #####
 
 
-###
 # Pymetrics site prefix
-###
 
 PYM_PREFIX %{WORD:severity}%{SPACE}%{TIMESTAMP_ISO8601:timestamp}%{SPACE}%{WORD:filename}%{SPACE}%{NUMBER:line_number}%{SPACE}%{NUMBER:process_id}%{SPACE}%{NUMBER:thread_id}
 
 
-###
 # debug.log
-###
 
 DEBUGLOG %{PYM_PREFIX} %{GREEDYDATA:message}
 
 
-###
 # web requests
 # includes exceptions.log, pymetrics.log
-###
 
 WEBLOG %{PYM_PREFIX} %{IPV4:source_ip}%{SPACE}%{NOTSPACE:username}%{SPACE}%{WORD:method}%{SPACE}%{NOTSPACE:path} %{GREEDYDATA:message}

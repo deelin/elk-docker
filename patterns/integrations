@@ -3,5 +3,7 @@
 #####
 
 
+# integrations.log*
+
 INTG %{TIMESTAMP_ISO8601:timestamp} \[%{WORD:severity}\] integrations:   \[%{WORD:platform}\] %{GREEDYDATA:message}
 
